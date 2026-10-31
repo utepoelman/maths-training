@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<html lang="en"><head>
+<!-- © Ute Poelman. All rights reserved. Terms of use: https://nugget-maths.co.nz/#terms --><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Nugget's Daily Maths Training</title>
 <style>
 :root{--p:#8e44ad;--y:#f1c40f;--bg:#f8f4fc;--t:#2d3436}
@@ -241,4 +242,5 @@ $('#cs').innerHTML=`• <b>Questions correct:</b> ${st.ok} / ${qs.length}<br>•
 $('#cm').textContent='Date: '+new Date().toLocaleDateString('en-NZ',{day:'numeric',month:'long',year:'numeric'});$('#student').hidden=true;$('#cert').hidden=false;document.body.classList.add('pc');scrollTo(0,0)}
 
 try{const m=location.hash.match(/a=([\w-]+)/);m?studentInit(dec(m[1])):teacherInit()}catch(e){teacherInit()}
-</script></body></html>
+</script><script src="https://nugget-maths.co.nz/notice.js" defer></script>
+</body></html>
