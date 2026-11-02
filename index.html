@@ -29,8 +29,51 @@ pre{background:#2d3436;color:#dfe6e9;padding:12px;border-radius:8px;overflow:aut
 #cert{text-align:center;background:#fff;padding:36px;border:10px double var(--p);border-radius:15px;max-width:700px;margin:10px auto}
 .ct{font-family:Georgia,serif;font-size:2.4rem;color:var(--p);font-weight:700}
 .cn{font-family:'Brush Script MT','Comic Sans MS',cursive;font-size:2.8rem;border-bottom:2px solid var(--t);padding:0 20px;display:inline-block;min-width:250px;margin:8px 0}
-#ws{display:none}.pg{display:grid;grid-template:1fr 1fr/1fr 1fr;height:281mm;page-break-after:always;break-after:page}.pg:last-child{page-break-after:auto}
-.sl{border:1px dashed #888;padding:4mm;overflow:hidden;font-size:13pt;color:#000}.sl.s2{font-size:10pt}.sl.s3{font-size:9.5pt}.sl.s4{font-size:8.5pt}
+
+#ws{display:none}
+
+.pg{
+  display:grid;
+  height:281mm;
+  page-break-after:always;
+  break-after:page;
+}
+
+.pg:last-child{
+  page-break-after:auto;
+}
+
+/* One worksheet per page */
+.pg1{
+  grid-template:1fr/1fr;
+}
+
+/* Two worksheets per page, stacked vertically */
+.pg2{
+  grid-template:1fr 1fr/1fr;
+}
+
+/* Four worksheets per page, in a 2 x 2 grid */
+.pg4{
+  grid-template:1fr 1fr/1fr 1fr;
+}
+
+.sl{
+  border:1px dashed #888;
+  padding:4mm;
+  overflow:hidden;
+  font-size:13pt;
+  color:#000;
+}
+
+.sl.s2{font-size:10pt}
+.sl.s3{font-size:9.5pt}
+.sl.s4{font-size:8.5pt}
+
+/* Adjust text size when several worksheets share a page */
+.sl.pp2{font-size:10pt}
+.sl.pp4{font-size:8pt}
+
 .sh{display:flex;align-items:center;gap:2mm;border-bottom:2px solid #8e44ad;padding-bottom:1.5mm;margin-bottom:2mm}.sh .ch{height:10mm}.sh b{color:#8e44ad;font-size:1.05em;line-height:1.1}.sh small{display:block;font-size:.85em}
 .sn{margin-bottom:2mm}.ql{margin:0;padding-left:1.4em}.sl.s3 .ql,.sl.s4 .ql{columns:2;column-gap:4mm}.ql li{break-inside:avoid;margin-bottom:1.5mm}
 .al{display:block;border-bottom:1px solid #777;height:1.9em;margin-right:4mm}.sl.s3 .al,.sl.s4 .al{display:inline-block;width:4.5em;height:1em;margin:0 0 0 .4em}
@@ -38,9 +81,49 @@ pre{background:#2d3436;color:#dfe6e9;padding:12px;border-radius:8px;overflow:aut
 @page{size:A4;margin:8mm}
 @media print{body.pw>*:not(#ws){display:none!important}body.pw #ws{display:block}body{background:#fff;padding:0}body.pc main,body.pc #hd,.np{display:none!important}#cert{margin:0 auto;box-shadow:none}}
 .fmt{font-size:.9rem;color:#636e72;margin:-4px 0 10px}.sy{border:1px solid var(--p);background:#fff;color:var(--p);border-radius:6px;padding:1px 9px;font-size:1rem;font-weight:700;cursor:pointer;margin-left:4px}.sy:hover{background:#f1e6f8}
-#calcw{position:fixed;right:14px;bottom:14px;z-index:60;display:flex;flex-direction:column;align-items:flex-end;gap:8px}
-#cpn{width:min(330px,calc(100vw - 28px));background:#fff;border:2px solid var(--p);border-radius:14px;box-shadow:0 8px 28px rgba(0,0,0,.25);padding:10px}
-#chd{display:flex;justify-content:space-between;align-items:center;color:var(--p);margin-bottom:6px}#chd button{border:0;background:none;font-size:1.1rem;cursor:pointer;color:#636e72}
+#calcw{
+  position:fixed;
+  right:14px;
+  bottom:14px;
+  z-index:60;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-end;
+  gap:8px;
+}
+
+#cpn{
+  width:min(330px,calc(100vw - 28px));
+  background:#fff;
+  border:2px solid var(--p);
+  border-radius:14px;
+  box-shadow:0 8px 28px rgba(0,0,0,.25);
+  padding:10px;
+}
+
+#chd{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  color:var(--p);
+  margin-bottom:6px;
+  cursor:grab;
+  user-select:none;
+  touch-action:none;
+}
+
+#chd:active{
+  cursor:grabbing;
+}
+
+#chd button{
+  border:0;
+  background:none;
+  font-size:1.1rem;
+  cursor:pointer;
+  color:#636e72;
+  touch-action:auto;
+}
 #cdp{background:#2d3436;color:#dfe6e9;border-radius:8px;padding:8px 10px;text-align:right;min-height:68px;font-family:Consolas,'Courier New',monospace}
 #cex{font-size:1rem;word-break:break-all;opacity:.8;min-height:1.2em}#crs{font-size:1.6rem;font-weight:700;color:var(--y);min-height:1.3em;word-break:break-all}
 #ckeys{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-top:8px}
@@ -80,7 +163,19 @@ function doGet() { return ContentService.createTextOutput('Nugget results endpoi
 <div class="card" id="out" hidden><h2>Your link</h2>
 <input type="text" id="lk" readonly style="width:100%"><p><button class="btn" id="cl">Copy link</button> <a id="tl" target="_blank" class="btn g" style="text-decoration:none;display:inline-block">Try it as a student</a></p>
 <p style="font-size:.9rem;color:#636e72">This page must be hosted somewhere students can reach it (Google Drive/Sites, GitHub Pages, your school's LMS or website). The link carries the setup inside it, so there's nothing else to store.</p>
-<h2>Printable worksheets <small>(4 per A4 page — cut along the dotted lines)</small></h2>
+
+<h2>Printable worksheets <small>(choose the number per A4 page)</small></h2>
+<p>
+  <label>
+    Worksheets per page:
+    <select id="pp">
+      <option value="1">1 per page</option>
+      <option value="2">2 per page</option>
+      <option value="4" selected>4 per page</option>
+    </select>
+  </label>
+</p>
+
 <p><label><input type="checkbox" class="wl" value="0" checked> Mild</label> &nbsp; <label><input type="checkbox" class="wl" value="1" checked> Medium</label> &nbsp; <label><input type="checkbox" class="wl" value="2" checked> Spicy</label> &nbsp; | &nbsp; <label><input type="checkbox" id="wk" checked> Add answer key page</label></p>
 <p><button class="btn y" id="pw">🖨️ Print worksheets</button> <span style="font-size:.9rem;color:#636e72">Each selected level prints on its own page. Tip: in the print dialog choose A4, scale 100%, and turn off headers/footers.</span></p>
 <h2>Question sets &amp; answer key</h2><div id="pv"></div></div>
@@ -88,7 +183,39 @@ function doGet() { return ContentService.createTextOutput('Nugget results endpoi
 
 <main id="student" hidden>
 <div class="card ctr" id="s-name"><h2 id="stt"></h2><p>What's your name?</p><input type="text" id="nm" maxlength="40" style="font-size:1.3rem;text-align:center"><p><button class="btn y" id="go">Let's go!</button></p></div>
-<div class="card ctr" id="s-lv" hidden><h2>Choose your heat level</h2><div class="lv" id="lvb"></div></div>
+
+<div class="card ctr" id="s-lv" hidden>
+  <h2>Choose your heat level</h2>
+  <div class="lv" id="lvb"></div>
+
+  <hr style="margin:24px 0;border:0;border-top:1px solid #e3d5ee">
+
+  <h2>Printable worksheets</h2>
+  <p>You can print a worksheet to practise these skills on paper.</p>
+
+  <p>
+    <label for="studentPrintLevel">Worksheet level:</label>
+    <select id="studentPrintLevel">
+      <option value="0">Mild</option>
+      <option value="1">Medium</option>
+      <option value="2">Spicy</option>
+    </select>
+  </p>
+
+  <p>
+    <label for="studentPrintLayout">Worksheets per A4 page:</label>
+    <select id="studentPrintLayout">
+      <option value="1">1 per page</option>
+      <option value="2">2 per page</option>
+      <option value="4">4 per page</option>
+    </select>
+  </p>
+
+  <button class="btn y" id="studentPrint">
+    🖨️ Print worksheets
+  </button>
+</div>
+
 <div class="card ctr" id="s-q" hidden><div class="prog"><div id="bar"></div></div>
 <div id="qn" style="margin-top:10px;color:#636e72"></div><div id="qsk" style="font-weight:700;color:var(--p)"></div><div id="qt"></div>
 <div id="fmt" class="fmt" hidden><span id="fmt-t"></span> <span id="sy"><button type="button" class="sy" data-s="^">^</button><button type="button" class="sy" data-s="(">(</button><button type="button" class="sy" data-s=")">)</button></span></div>
@@ -351,17 +478,204 @@ const unary=()=>{const t=pk();if(t=='-'||t=='−'){nx();return-unary()}if(t=='+'
 const term=()=>{let v=unary();for(;;){const t=pk();if(t=='×'||t=='*'){nx();v*=unary()}else if(t=='÷'||t=='/'){nx();v/=unary()}else if(t!==undefined&&t!=')'&&!/^[+\-−^]$/.test(t))v*=unary();else break}return v};
 const expr=()=>{let v=term();while(pk()=='+'||pk()=='-'||pk()=='−')v=nx()=='+'?v+term():v-term();return v};
 const v=expr();if(i<T.length||!isFinite(v))throw 0;return v}
-const cf=v=>String(parseFloat(v.toPrecision(10))).replace('-','−');
-function calcInit(){let ex='',ans=0,deg=true,done=false;const draw=()=>$('#cex').textContent=ex||'0';
-$('#ckeys').innerHTML=CB.map(([l,k,c])=>`<button type="button" data-k="${k}" class="ck ${c}">${l}</button>`).join('');
-$('#ctg').onclick=()=>{$('#cpn').hidden=!$('#cpn').hidden};$('#ccl').onclick=()=>$('#cpn').hidden=true;
-$('#ckeys').onclick=e=>{const b=e.target.closest('button');if(!b)return;const k=b.dataset.k;
-if(k=='deg'){deg=!deg;b.textContent=deg?'DEG':'RAD';return}
-if(k=='cl'){ex='';$('#crs').textContent='';done=false;return draw()}
-if(k=='bk'){ex=ex.replace(/(sin⁻¹\(|cos⁻¹\(|tan⁻¹\(|sin\(|cos\(|tan\(|log\(|ln\(|√\(|Ans|.)$/,'');return draw()}
-if(k=='eq'){try{ans=cCalc(ex,deg,ans);$('#crs').textContent='= '+cf(ans);done=true}catch(_){$('#crs').textContent='Error';done=false}return}
-if(done){ex=['+','−','×','÷','^','^2'].includes(k)?'Ans':'';done=false;$('#crs').textContent=''}
-ex+=k;draw()}}
+
+// ---------- Worksheet printing (teacher and student) ----------
+function printWorksheets(config, levels, perPage, includeKey=false){
+
+  perPage=Number(perPage);
+  if(![1,2,4].includes(perPage))perPage=4;
+
+  const n=config.n;
+  const nm=config.t||"";
+
+  // Choose a suitable font size based on the number of questions
+  const sz=n<=5?'':n<=8?'s2':n<=12?'s3':'s4';
+
+  let html='';
+
+  levels.forEach(level=>{
+
+    const questions=build(config,level);
+
+    const worksheet=`
+      <div class="sl ${sz} pp${perPage}">
+        <div class="sh">
+          ${chi(level)}
+          <b>
+            Nugget's Daily Maths Training
+            <small>${LV[level][0]} level${nm?' · '+nm:''}</small>
+          </b>
+        </div>
+
+        <div class="sn">
+          Name: ________________ Date: ________
+        </div>
+
+        <ol class="ql">
+          ${questions.map(q=>`
+            <li>${q.q}<span class="al"></span></li>
+          `).join('')}
+        </ol>
+      </div>
+    `;
+
+    // Fill each page with the requested number of copies
+    const pageContent=Array(perPage).fill(worksheet).join('');
+
+    html+=`
+      <div class="pg pg${perPage}">
+        ${pageContent}
+      </div>
+    `;
+  });
+
+  // Answer key is optional and only included for teacher printing
+  if(includeKey){
+    html+=`
+      <div class="pg" style="display:block">
+        <div class="key">
+          <h2 style="color:#8e44ad">
+            Answer key — ${nm||"Nugget's Daily Maths Training"}
+          </h2>
+
+          ${levels.map(level=>`
+            <h3>${chi(level)} ${LV[level][0]}</h3>
+            <ol>
+              ${build(config,level).map(q=>`
+                <li>${q.a}</li>
+              `).join('')}
+            </ol>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  }
+
+  $('#ws').innerHTML=html;
+
+  document.body.classList.add('pw');
+  window.print();
+  document.body.classList.remove('pw');
+}
+
+function calcInit(){
+  let ex='',ans=0,deg=true,done=false;
+
+  const draw=()=>$('#cex').textContent=ex||'0';
+
+  $('#ckeys').innerHTML=CB.map(([l,k,c])=>
+    `<button type="button" data-k="${k}" class="ck ${c}">${l}</button>`
+  ).join('');
+
+  // Show/hide calculator
+  $('#ctg').onclick=()=>{
+    $('#cpn').hidden=!$('#cpn').hidden;
+  };
+
+  $('#ccl').onclick=()=>{
+    $('#cpn').hidden=true;
+  };
+
+  // Make calculator draggable using its title bar
+  const chd=$('#chd');
+  const cw=$('#calcw');
+
+  let drag=null;
+
+  chd.addEventListener('pointerdown',e=>{
+    // Don't start dragging when the close button is clicked
+    if(e.target.closest('button'))return;
+
+    const rect=cw.getBoundingClientRect();
+
+    drag={
+      x:e.clientX-rect.left,
+      y:e.clientY-rect.top
+    };
+
+    // Switch from right/bottom positioning to left/top
+    cw.style.left=rect.left+'px';
+    cw.style.top=rect.top+'px';
+    cw.style.right='auto';
+    cw.style.bottom='auto';
+
+    chd.setPointerCapture(e.pointerId);
+    chd.style.cursor='grabbing';
+  });
+
+  chd.addEventListener('pointermove',e=>{
+    if(!drag)return;
+
+    const w=cw.offsetWidth;
+    const h=cw.offsetHeight;
+
+    let x=e.clientX-drag.x;
+    let y=e.clientY-drag.y;
+
+    // Keep calculator within the visible screen
+    x=Math.max(0,Math.min(window.innerWidth-w,x));
+    y=Math.max(0,Math.min(window.innerHeight-h,y));
+
+    cw.style.left=x+'px';
+    cw.style.top=y+'px';
+  });
+
+  const stopDrag=()=>{
+    drag=null;
+    chd.style.cursor='grab';
+  };
+
+  chd.addEventListener('pointerup',stopDrag);
+  chd.addEventListener('pointercancel',stopDrag);
+
+  // Calculator buttons
+  $('#ckeys').onclick=e=>{
+    const b=e.target.closest('button');
+    if(!b)return;
+
+    const k=b.dataset.k;
+
+    if(k=='deg'){
+      deg=!deg;
+      b.textContent=deg?'DEG':'RAD';
+      return;
+    }
+
+    if(k=='cl'){
+      ex='';
+      $('#crs').textContent='';
+      done=false;
+      return draw();
+    }
+
+    if(k=='bk'){
+      ex=ex.replace(/(sin⁻¹\(|cos⁻¹\(|tan⁻¹\(|sin\(|cos\(|tan\(|log\(|ln\(|√\(|Ans|.)$/,'');
+      return draw();
+    }
+
+    if(k=='eq'){
+      try{
+        ans=cCalc(ex,deg,ans);
+        $('#crs').textContent='= '+cf(ans);
+        done=true;
+      }catch(_){
+        $('#crs').textContent='Error';
+        done=false;
+      }
+      return;
+    }
+
+    if(done){
+      ex=['+','−','×','÷','^','^2'].includes(k)?'Ans':'';
+      done=false;
+      $('#crs').textContent='';
+    }
+
+    ex+=k;
+    draw();
+  };
+}
+
 function symInit(){$('#sy').onclick=e=>{const b=e.target.closest('button');if(!b)return;const i=$('#qa'),s=i.selectionStart==null?i.value.length:i.selectionStart,t=i.selectionEnd==null?s:i.selectionEnd;i.setRangeText(b.dataset.s,s,t,'end');i.focus()}}
 
 // ---------- Teacher ----------
@@ -377,10 +691,22 @@ if(u&&!u.startsWith('https://script.google.com/'))return alert('The Web app URL 
 const c={n,s:sel,d:Math.random().toString(36).slice(2,8),t:$('#an').value.trim(),u,k:$('#calc').checked?1:0},link=location.href.split('#')[0]+'#a='+enc(c);
 TC=c;$('#lk').value=link;$('#tl').href=link;$('#out').hidden=false;
 $('#pv').innerHTML=LV.map((v,l)=>`<details><summary>${v[1]} ${v[0]}</summary><ol>${build(c,l).map(q=>`<li>${q.q} <b style="color:var(--p)">→ ${q.a}</b><br><small style="color:#636e72">${q.ex}</small></li>`).join('')}</ol></details>`).join('');say('Link created! Share it with your students. 🐹');$('#out').scrollIntoView({behavior:'smooth'})};
-$('#pw').onclick=()=>{const ls=[...document.querySelectorAll('.wl:checked')].map(x=>+x.value);if(!ls.length||!TC)return alert('Tick at least one level.');const n=TC.n,sz=n<=5?'':n<=8?'s2':n<=12?'s3':'s4',nm=TC.t||'';
-let h=ls.map(l=>{const qs=build(TC,l),sl=`<div class="sl ${sz}"><div class="sh">${chi(l)}<b>Nugget's Daily Maths Training<small>${LV[l][0]} level${nm?' · '+nm:''}</small></b></div><div class="sn">Name: ________________ Date: ________</div><ol class="ql">${qs.map(q=>`<li>${q.q}<span class="al"></span></li>`).join('')}</ol></div>`;return`<div class="pg">${sl.repeat(4)}</div>`}).join('');
-if($('#wk').checked)h+=`<div class="pg" style="display:block"><div class="key"><h2 style="color:#8e44ad">Answer key — ${nm||"Nugget's Daily Maths Training"}</h2>${ls.map(l=>`<h3>${chi(l)} ${LV[l][0]}</h3><ol>${build(TC,l).map(q=>`<li>${q.a}</li>`).join('')}</ol>`).join('')}</div></div>`;
-$('#ws').innerHTML=h;document.body.classList.add('pw');print();document.body.classList.remove('pw')};
+
+$('#pw').onclick=()=>{
+
+  const levels=[
+    ...document.querySelectorAll('.wl:checked')
+  ].map(x=>+x.value);
+
+  if(!levels.length||!TC)
+    return alert('Tick at least one level.');
+
+  const perPage=+$('#pp').value;
+  const includeKey=$('#wk').checked;
+
+  printWorksheets(TC,levels,perPage,includeKey);
+};
+
 $('#cl').onclick=()=>navigator.clipboard.writeText($('#lk').value).then(()=>$('#cl').textContent='Copied ✓')}
 
 // ---------- Student ----------
@@ -389,6 +715,16 @@ const show=id=>{['s-name','s-lv','s-q','s-d'].forEach(x=>$('#'+x).hidden=x!=id);
 function studentInit(c){C=c;if(c.k)calcInit();symInit();$('#student').hidden=false;$('#teacher').hidden=true;$('#stt').textContent=c.t||'Ready to train?';say("Hi, I'm Nugget! Let's warm up those maths muscles!");
 $('#go').onclick=()=>{name=$('#nm').value.trim();if(!name)return say('Pop your name in first so I know who you are!');show('s-lv');say('How hot can you handle it?')};
 $('#lvb').innerHTML=LV.map((v,l)=>`<button style="border:3px solid ${v[2]}" onclick="start(${l})">${v[1]} ${v[0]}<small>${v[3]}</small></button>`).join('');
+
+// Student worksheet printing
+$('#studentPrint').onclick=()=>{
+
+  const level=+$('#studentPrintLevel').value;
+  const perPage=+$('#studentPrintLayout').value;
+
+  printWorksheets(C,[level],perPage,false);
+};
+
 $('#chk').onclick=check;$('#qa').onkeydown=e=>{if(e.key=='Enter'){$('#nx').hidden?check():$('#nx').click()}};$('#nx').onclick=next;$('#hb').onclick=hint;$('#sw').onclick=reveal;$('#cc').onclick=cert}
 function start(l){lv=l;qs=build(C,l);qi=0;st={first:0,ok:0,wrong:0,t0:Date.now()};show('s-q');ask()}
 function ask(){const q=qs[qi];tries=0;$('#qn').textContent=`Question ${qi+1} of ${qs.length}`;$('#qsk').textContent=q.sk;$('#qt').textContent=q.q;$('#qa').value='';$('#qa').disabled=false;$('#fb').textContent='';$('#hn').hidden=true;$('#hb').hidden=true;hinted=0;$('#chk').hidden=false;$('#nx').hidden=true;$('#sw').hidden=true;$('#bar').style.width=qi/qs.length*100+'%';$('#fmt').hidden=!q.m;if(q.m)$('#fmt-t').textContent=q.m=='f'?'Type your answer in brackets, e.g. 3(2a + 5) or (x + 2)(x + 3). Use ^ for powers (x^2 means x²).':'Type your answer with no brackets, e.g. 6a + 15. Use ^ for powers (x^2 means x²).';$('#qa').style.width=q.m?'min(100%,420px)':'';$('#qa').focus()}
